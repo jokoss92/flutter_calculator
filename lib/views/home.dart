@@ -6,6 +6,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  double nominal1;
+  double nominal2;
+  String opr;
+
+  @override
+  void initState() {
+    nominal1 = 0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,12 +36,12 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      '1',
+                      nominal2 != null ? nominal2.toStringAsFixed(0) : '',
                       style: TextStyle(
                           fontSize: 32.0, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '2',
+                      nominal1 != null ? nominal1.toStringAsFixed(0) : '',
                       style: TextStyle(
                           fontSize: 32.0, fontWeight: FontWeight.bold),
                     ),
@@ -54,7 +64,7 @@ class _HomeState extends State<Home> {
                           'AC',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("AC"),
                       ),
                     )),
                     Expanded(
@@ -65,7 +75,7 @@ class _HomeState extends State<Home> {
                           Icons.backspace,
                           color: Colors.white,
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("Backspace"),
                       ),
                     )),
                     Expanded(
@@ -76,7 +86,7 @@ class _HomeState extends State<Home> {
                           '/',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("/"),
                       ),
                     )),
                   ],
@@ -91,7 +101,7 @@ class _HomeState extends State<Home> {
                           '7',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("7"),
                       ),
                     )),
                     Expanded(
@@ -102,7 +112,7 @@ class _HomeState extends State<Home> {
                           '8',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("8"),
                       ),
                     )),
                     Expanded(
@@ -113,7 +123,7 @@ class _HomeState extends State<Home> {
                           '9',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("9"),
                       ),
                     )),
                     Expanded(
@@ -124,7 +134,7 @@ class _HomeState extends State<Home> {
                           'x',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("x"),
                       ),
                     )),
                   ],
@@ -139,7 +149,7 @@ class _HomeState extends State<Home> {
                           '4',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("4"),
                       ),
                     )),
                     Expanded(
@@ -150,7 +160,7 @@ class _HomeState extends State<Home> {
                           '5',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("5"),
                       ),
                     )),
                     Expanded(
@@ -161,7 +171,7 @@ class _HomeState extends State<Home> {
                           '6',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("6"),
                       ),
                     )),
                     Expanded(
@@ -172,7 +182,7 @@ class _HomeState extends State<Home> {
                           '-',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("-"),
                       ),
                     )),
                   ],
@@ -187,7 +197,7 @@ class _HomeState extends State<Home> {
                           '1',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("1"),
                       ),
                     )),
                     Expanded(
@@ -198,7 +208,7 @@ class _HomeState extends State<Home> {
                           '2',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("2"),
                       ),
                     )),
                     Expanded(
@@ -209,7 +219,7 @@ class _HomeState extends State<Home> {
                           '3',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("3"),
                       ),
                     )),
                     Expanded(
@@ -220,7 +230,7 @@ class _HomeState extends State<Home> {
                           '+',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("+"),
                       ),
                     )),
                   ],
@@ -235,7 +245,7 @@ class _HomeState extends State<Home> {
                           '0',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () {},
+                        onPressed: () => _action("0"),
                       ),
                     )),
                     Expanded(
@@ -257,5 +267,113 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  _action(parameter) {
+    switch (parameter) {
+      case 'AC':
+        setState(() {
+          nominal1 = 0;
+          nominal2 = null;
+          opr = null;
+        });
+        break;
+
+      case 'Backspace':
+        setState(() {
+          var length = nominal1.toStringAsFixed(0).length;
+          if (length == 1) {
+            nominal1 = 0;
+          } else {
+            nominal1 = double.parse(
+                nominal1.toStringAsFixed(0).substring(0, (length - 1)));
+          }
+        });
+        break;
+
+      case "/":
+        setState(() {
+          if (nominal2 == null) {
+            nominal2 = nominal1;
+            nominal1 = 0;
+          }
+          if (opr != null) {
+            var result = _math(opr);
+            nominal2 = result;
+            nominal1 = 0;
+          }
+          opr = "/";
+        });
+        break;
+
+      case "x":
+        setState(() {
+          if (nominal2 == null) {
+            nominal2 = nominal1;
+            nominal1 = 0;
+          }
+          if (opr != null) {
+            var result = _math(opr);
+            nominal2 = result;
+            nominal1 = 0;
+          }
+          opr = "x";
+        });
+        break;
+
+      case "-":
+        setState(() {
+          if (nominal2 == null) {
+            nominal2 = nominal1;
+            nominal1 = 0;
+          }
+          if (opr != null) {
+            var result = _math(opr);
+            nominal2 = result;
+            nominal1 = 0;
+          }
+          opr = "-";
+        });
+        break;
+
+      case "+":
+        setState(() {
+          if (nominal2 == null) {
+            nominal2 = nominal1;
+            nominal1 = 0;
+          }
+          if (opr != null) {
+            var result = _math(opr);
+            nominal2 = result;
+            nominal1 = 0;
+          }
+          opr = "+";
+        });
+        break;
+
+      default:
+        {
+          setState(() {
+            if (nominal1 != 0) {
+              nominal1 = double.parse(nominal1.toStringAsFixed(0) + parameter);
+            } else {
+              nominal1 = double.parse(parameter);
+            }
+          });
+        }
+    }
+  }
+
+  _math(opr) {
+    switch (opr) {
+      case "/":
+        return nominal2 / nominal1;
+      case "+":
+        return nominal2 + nominal1;
+      case "-":
+        return nominal2 - nominal1;
+      case "x":
+        return nominal2 * nominal1;
+    }
   }
 }
